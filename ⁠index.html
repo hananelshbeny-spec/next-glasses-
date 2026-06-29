@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXT Glasses - Premium Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ستايل إضافي لتنعيم الحركات */
+        .smooth-transition { transition: all 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-[#0b0c10] text-[#white] font-sans antialiased">
+
+    <header class="border-b border-gray-800 bg-[#0b0c10]/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-black tracking-widest text-white">N E X T</div>
+            <nav class="hidden md:flex space-x-8 space-x-reverse text-sm uppercase tracking-wider text-gray-400">
+                <a href="#" class="hover:text-white smooth-transition">الرئيسية</a>
+                <a href="#" class="text-white font-semibold">المتجر</a>
+                <a href="#" class="hover:text-white smooth-transition">عن NEXT</a>
+            </nav>
+            <div class="text-sm text-gray-400">سلة المشتريات (0)</div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        
+        <div class="relative bg-[#1f2833] rounded-2xl overflow-hidden aspect-square flex items-center justify-content shadow-2xl border border-gray-800">
+            
+            <img id="product-image" src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80" alt="NEXT Premium Glasses" class="w-full h-full object-cover smooth-transition">
+            
+            <div id="camera-container" class="hidden absolute inset-0 bg-black flex flex-col items-center justify-center">
+                <video id="webcam" autoplay playsinline class="w-full h-full object-cover scale-x-[-1]"></video>
+                <img id="overlay-glasses" src="https://i.ibb.co/PNG-transparent-sunglasses.png" class="absolute w-1/2 top-[35%] opacity-90 pointer-events-none animate-pulse" alt="Virtual Glasses">
+                
+                <button onclick="toggleTryOn()" class="absolute bottom-6 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full text-sm font-medium smooth-transition shadow-lg">
+                    إغلاق الكاميرا ✕
+                </button>
+            </div>
+
+            <span class="absolute top-4 right-4 bg-black/60 text-xs text-gray-300 px-3 py-1 rounded-full uppercase tracking-widest">Premium Collection</span>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <h1 class="text-4xl font-bold tracking-tight text-white mb-2">NEXT Stealth-X</h1>
+                <p class="text-xl text-emerald-400 font-semibold">450.00 ج.م</p>
+            </div>
+
+            <p class="text-gray-400 leading-relaxed text-sm">
+                نظارة شمسية بتصميم عصري وبسيط (Minimalist) مستوحى من الماركات العالمية. إطار خفيف الوزن ومقاوم للصدمات مع عدسات تحمي تماماً من الأشعة فوق البنفسجية، مصممة خصيصاً لأصحاب الذوق الرفيع.
+            </p>
+
+            <div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">اللون المتاح</h3>
+                <div class="flex space-x-3 space-x-reverse">
+                    <button class="w-8 h-8 rounded-full bg-black border-2 border-white focus:outline-none"></button>
+                    <button class="w-8 h-8 rounded-full bg-amber-900 border border-transparent hover:border-gray-500 focus:outline-none"></button>
+                </div>
+            </div>
+
+            <div class="pt-4 space-y-4">
+                <button onclick="toggleTryOn()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium py-4 rounded-xl shadow-lg smooth-transition flex items-center justify-center space-x-2 space-x-reverse tracking-wide">
+                    <span>📸 جربها الآن افتراضيًا (Virtual Try-On)</span>
+                </button>
+
+                <button onclick="sendToWhatsApp()" class="w-full bg-transparent hover:bg-white border-2 border-white text-white hover:text-black font-bold py-4 rounded-xl smooth-transition flex items-center justify-center space-x-2 space-x-reverse tracking-wide">
+                    <span>طلب سريع عبر واتساب 💬</span>
+                </button>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-4 text-xs text-gray-500 text-center">
+                التوصيل متاح لجميع المحافظات | الدفع عند الاستلام
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // دالة تفعيل وإغلاق الكاميرا للتجربة الافتراضية
+        async function toggleTryOn() {
+            const cameraContainer = document.getElementById('camera-container');
+            const video = document.getElementById('webcam');
+
+            if (cameraContainer.classList.contains('hidden')) {
+                cameraContainer.classList.remove('hidden');
+                try {
+                    // طلب الإذن لفتح الكاميرا من المستخدم
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                    video.srcObject = stream;
+                } catch (err) {
+                    alert("عذراً، يجب السماح بوصول الكاميرا لتجربة النظارة افتراضياً.");
+                    cameraContainer.classList.add('hidden');
+                }
+            } else {
+                cameraContainer.classList.add('hidden');
+                const stream = video.srcObject;
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop()); // إغلاق الكاميرا لتوفير البطارية
+                }
+            }
+        }
+
+        // دالة تحويل المستخدم إلى واتساب برسالة مخصصة تلقائية
+        function sendToWhatsApp() {
+            const phoneNumber = "201000000000"; // قومي بتغيير هذا الرقم لرقم واتساب البراند الخاص بكِ (مع كود الدولة)
+            const productName = "NEXT Stealth-X";
+            const productPrice = "450.00 ج.م";
+            const pageUrl = window.location.href;
+
+            // صياغة الرسالة التلقائية الاحترافية
+            const message = `مرحباً براند NEXT 👋%0A%0Aأود طلب نظارة من الموقع:%0A📦 المنتج: *${productName}*%0A💰 السعر: *${productPrice}*%0A🔗 رابط المنتج: ${pageUrl}%0A%0Aبرجاء تأكيد الطلب لتزويدكم بتفاصيل الشحن.`;
+
+            // فتح رابط واتساب
+            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+        }
+    </script>
+</body>
+</html>
